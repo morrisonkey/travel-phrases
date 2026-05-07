@@ -1,4 +1,4 @@
-const CACHE = 'travel-phrases-v1';
+const CACHE = 'travel-phrases-v2';
 const FILES = ['./index.html'];
 
 self.addEventListener('install', e => {
