@@ -33,7 +33,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── screens ── */
     .screen {
       position: fixed; inset: 0;
       display: flex; flex-direction: column;
@@ -45,14 +44,12 @@
     .screen.active { transform: translateX(0); }
     .screen.under  { transform: translateX(-28%); }
 
-    /* ── headers ── */
     .hdr {
       flex-shrink: 0;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
     }
 
-    /* home header */
     .hdr-home {
       padding: calc(var(--sat) + 14px) 20px 16px;
     }
@@ -65,7 +62,6 @@
       text-transform: uppercase; color: var(--muted); margin-top: 3px;
     }
 
-    /* nav header (phrases / detail) */
     .hdr-nav {
       height: calc(var(--sat) + 50px);
       display: flex; align-items: flex-end;
@@ -85,10 +81,8 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    /* ── scrollable areas ── */
     .scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
-    /* ── category rows ── */
     .cat-row {
       display: flex; align-items: center;
       height: var(--row-h); padding: 0 20px;
@@ -102,7 +96,6 @@
     .cat-count { font-size: 12px; color: var(--muted); }
     .chev      { font-size: 14px; color: var(--border); margin-left: 2px; }
 
-    /* ── phrase rows ── */
     .phrase-row {
       display: flex; align-items: center;
       height: var(--row-h); padding: 0 20px;
@@ -123,7 +116,6 @@
       overflow: hidden; text-overflow: ellipsis; flex-shrink: 0;
     }
 
-    /* ── detail ── */
     .detail-body {
       flex: 1; display: flex; flex-direction: column;
       align-items: center; justify-content: center;
@@ -144,7 +136,6 @@
       from { text-shadow: 0 0 8px  rgba(240,168,50,0.3); }
       to   { text-shadow: 0 0 24px rgba(240,168,50,0.75); }
     }
-
 
     .detail-pinyin {
       font-size: 28px; font-weight: 300; text-align: center;
@@ -198,8 +189,7 @@
       </button>
     </div>
     <div class="detail-body">
-      <div class="detail-zh"  id="detail-zh"  onclick="speak()"></div>
-
+      <div class="detail-zh"    id="detail-zh"    onclick="speak()"></div>
       <div class="detail-pinyin" id="detail-pinyin"></div>
       <div class="detail-pron"   id="detail-pron"></div>
       <div class="detail-div"></div>
@@ -214,10 +204,12 @@
 const CATS = [
   { id:'basics',        name:'Basics & Pleasantries',  icon:'👋' },
   { id:'food',          name:'Food & Drink',            icon:'🍜' },
+  { id:'ingredients',   name:'Ingredients',             icon:'🥩' },
   { id:'directions',    name:'Getting Around',          icon:'🗺️' },
   { id:'shopping',      name:'Shopping & Bargaining',   icon:'🛒' },
   { id:'numbers',       name:'Numbers',                 icon:'🔢' },
   { id:'accommodation', name:'Accommodation',           icon:'🏨' },
+  { id:'utilities',     name:'Utilities',               icon:'🔌' },
   { id:'payment',       name:'Payment & WeChat',        icon:'💳' },
   { id:'health',        name:'Health & Emergencies',    icon:'🏥' },
   { id:'photography',   name:'Photography',             icon:'📸' },
@@ -226,153 +218,179 @@ const CATS = [
 
 const PH = {
   basics: [
-    { id:'b1',  zh:'你好',             pin:'Nǐ hǎo',                      pro:'nee how',                        en:'Hello' },
-    { id:'b2',  zh:'谢谢',             pin:'Xièxiè',                      pro:'shyeh-shyeh',                    en:'Thank you' },
-    { id:'b3',  zh:'不客气',           pin:'Bù kèqì',                     pro:'boo kuh-chee',                   en:"You're welcome" },
-    { id:'b4',  zh:'对不起',           pin:'Duìbuqǐ',                     pro:'dway-boo-chee',                  en:'Sorry / Excuse me' },
-    { id:'b5',  zh:'是',               pin:'Shì',                         pro:'shrr',                           en:'Yes' },
-    { id:'b6',  zh:'不',               pin:'Bù',                          pro:'boo',                            en:'No' },
-    { id:'b7',  zh:'好的',             pin:'Hǎo de',                      pro:'how duh',                        en:'Good / OK' },
-    { id:'b8',  zh:'我听不懂',         pin:'Wǒ tīng bù dǒng',            pro:'woh ting boo dong',              en:"I don't understand" },
-    { id:'b9',  zh:'慢一点',           pin:'Màn yīdiǎn',                  pro:'man ee-dyen',                    en:'Please speak slower' },
-    { id:'b10', zh:'你会说英语吗？',   pin:'Nǐ huì shuō yīngyǔ ma?',     pro:'nee hway shwoh ying-yoo ma',     en:'Do you speak English?' },
-    { id:'b11', zh:'再见',             pin:'Zàijiàn',                     pro:'dzye-jyen',                      en:'Goodbye' },
-    { id:'b12', zh:'请',               pin:'Qǐng',                        pro:'ching',                          en:'Please' },
-    { id:'b13', zh:'救命！',           pin:'Jiùmìng!',                    pro:'jyo-ming',                       en:'Help!' },
+    { id:'b1',  zh:'你好',                 pin:'Nǐ hǎo',                                pro:'nee how',                              en:'Hello' },
+    { id:'b2',  zh:'谢谢',                 pin:'Xièxiè',                                pro:'shyeh-shyeh',                          en:'Thank you' },
+    { id:'b3',  zh:'不客气',               pin:'Bù kèqì',                               pro:'boo kuh-chee',                         en:"You're welcome" },
+    { id:'b4',  zh:'对不起',               pin:'Duìbuqǐ',                               pro:'dway-boo-chee',                        en:'Sorry / Excuse me' },
+    { id:'b5',  zh:'是',                   pin:'Shì',                                   pro:'shrr',                                 en:'Yes' },
+    { id:'b6',  zh:'不',                   pin:'Bù',                                    pro:'boo',                                  en:'No' },
+    { id:'b7',  zh:'好的',                 pin:'Hǎo de',                                pro:'how duh',                              en:'Good / OK' },
+    { id:'b8',  zh:'我听不懂',             pin:'Wǒ tīng bù dǒng',                      pro:'woh ting boo dong',                    en:"I don't understand" },
+    { id:'b9',  zh:'慢一点',               pin:'Màn yīdiǎn',                            pro:'man ee-dyen',                          en:'Please speak slower' },
+    { id:'b10', zh:'你会说英语吗？',       pin:'Nǐ huì shuō yīngyǔ ma?',               pro:'nee hway shwoh ying-yoo ma',           en:'Do you speak English?' },
+    { id:'b11', zh:'再见',                 pin:'Zàijiàn',                               pro:'dzye-jyen',                            en:'Goodbye' },
+    { id:'b12', zh:'请',                   pin:'Qǐng',                                  pro:'ching',                                en:'Please' },
+    { id:'b13', zh:'救命！',               pin:'Jiùmìng!',                              pro:'jyo-ming',                             en:'Help!' },
     { id:'b14', zh:'对不起，我不会说普通话', pin:'Duìbuqǐ, wǒ bù huì shuō pǔtōnghuà', pro:'dway-boo-chee, woh boo hway shwoh poo-tong-hwah', en:"I'm sorry, I don't speak Mandarin" },
-    { id:'b15', zh:'请等一下',         pin:'Qǐng děng yīxià',             pro:'ching dung ee-shya',             en:'One moment please' },
+    { id:'b15', zh:'请等一下',             pin:'Qǐng děng yīxià',                       pro:'ching dung ee-shya',                   en:'One moment please' },
+    { id:'b16', zh:'我是美国人',           pin:'Wǒ shì měiguórén',                      pro:'woh shrr may-gwoh-ren',                en:'I am American' },
+    { id:'b17', zh:'我是越南人',           pin:'Wǒ shì yuènánrén',                      pro:'woh shrr ywen-nan-ren',                en:'I am Vietnamese' },
   ],
   food: [
-    { id:'f1',  zh:'不要糖，谢谢',     pin:'Bù yào táng, xièxiè',        pro:'boo yow tahng, shyeh-shyeh',     en:'No sugar please' },
-    { id:'f2',  zh:'少一点糖',         pin:'Shǎo yīdiǎn táng',           pro:'shaow ee-dyen tahng',            en:'A little sugar' },
-    { id:'f3',  zh:'不甜',             pin:'Bù tián',                     pro:'boo tyen',                       en:'Not sweet' },
-    { id:'f4',  zh:'不要冰',           pin:'Bù yào bīng',                 pro:'boo yow bing',                   en:'No ice' },
-    { id:'f5',  zh:'不辣',             pin:'Bù là',                       pro:'boo lah',                        en:'Not spicy' },
-    { id:'f6',  zh:'少辣',             pin:'Shǎo là',                     pro:'shaow lah',                      en:'A little spicy' },
-    { id:'f7',  zh:'不要味精',         pin:'Bù yào wèijīng',              pro:'boo yow way-jing',               en:'No MSG' },
-    { id:'f8',  zh:'不要贝类海鲜',     pin:'Bù yào bèilèi hǎixiān',      pro:'boo yow bay-lay high-shyen',     en:'No shellfish' },
-    { id:'f9',  zh:'不要虾',           pin:'Bù yào xiā',                  pro:'boo yow shya',                   en:'No shrimp' },
-    { id:'f10', zh:'不要螃蟹',         pin:'Bù yào pángxiè',              pro:'boo yow pahng-shyeh',            en:'No crab' },
-    { id:'f11', zh:'不要扇贝',         pin:'Bù yào shànbèi',              pro:'boo yow shan-bay',               en:'No scallops' },
-    { id:'f12', zh:'不要内脏',         pin:'Bù yào nèizàng',              pro:'boo yow nay-dzahng',             en:'No organ meat' },
-    { id:'f13', zh:'不要啤酒',         pin:'Bù yào píjiǔ',                pro:'boo yow pee-jyo',                en:'No beer' },
-    { id:'f14', zh:'请给我水',         pin:'Qǐng gěi wǒ shuǐ',           pro:'ching gay woh shway',            en:'Water please' },
-    { id:'f15', zh:'热水',             pin:'Rè shuǐ',                     pro:'ruh shway',                      en:'Hot water' },
-    { id:'f16', zh:'买单',             pin:'Mǎidān',                      pro:'my-dan',                         en:'The bill please' },
-    { id:'f17', zh:'你推荐什么？',     pin:'Nǐ tuījiàn shénme?',          pro:'nee tway-jyen shun-muh',         en:'What do you recommend?' },
-    { id:'f18', zh:'这个辣吗？',       pin:'Zhège là ma?',                pro:'juh-guh lah ma',                 en:'Is this spicy?' },
-    { id:'f19', zh:'好吃！',           pin:'Hǎo chī!',                    pro:'how chrr',                       en:'Delicious!' },
-    { id:'f20', zh:'菜单',             pin:'Càidān',                      pro:'tsye-dan',                       en:'Menu' },
-    { id:'f21', zh:'素食',             pin:'Sùshí',                       pro:'soo-shrr',                       en:'Vegetarian' },
+    { id:'f1',  zh:'不要糖，谢谢',         pin:'Bù yào táng, xièxiè',                  pro:'boo yow tahng, shyeh-shyeh',           en:'No sugar please' },
+    { id:'f2',  zh:'少一点糖',             pin:'Shǎo yīdiǎn táng',                     pro:'shaow ee-dyen tahng',                  en:'A little sugar' },
+    { id:'f3',  zh:'不甜',                 pin:'Bù tián',                               pro:'boo tyen',                             en:'Not sweet' },
+    { id:'f4',  zh:'不要冰',               pin:'Bù yào bīng',                           pro:'boo yow bing',                         en:'No ice' },
+    { id:'f5',  zh:'不辣',                 pin:'Bù là',                                 pro:'boo lah',                              en:'Not spicy' },
+    { id:'f6',  zh:'少辣',                 pin:'Shǎo là',                               pro:'shaow lah',                            en:'A little spicy' },
+    { id:'f7',  zh:'不要味精',             pin:'Bù yào wèijīng',                        pro:'boo yow way-jing',                     en:'No MSG' },
+    { id:'f8',  zh:'不要贝类海鲜',         pin:'Bù yào bèilèi hǎixiān',                pro:'boo yow bay-lay high-shyen',           en:'No shellfish' },
+    { id:'f9',  zh:'不要虾',               pin:'Bù yào xiā',                            pro:'boo yow shya',                         en:'No shrimp' },
+    { id:'f10', zh:'不要螃蟹',             pin:'Bù yào pángxiè',                        pro:'boo yow pahng-shyeh',                  en:'No crab' },
+    { id:'f11', zh:'不要扇贝',             pin:'Bù yào shànbèi',                        pro:'boo yow shan-bay',                     en:'No scallops' },
+    { id:'f12', zh:'不要内脏',             pin:'Bù yào nèizàng',                        pro:'boo yow nay-dzahng',                   en:'No organ meat' },
+    { id:'f13', zh:'不要啤酒',             pin:'Bù yào píjiǔ',                          pro:'boo yow pee-jyo',                      en:'No beer' },
+    { id:'f14', zh:'请给我水',             pin:'Qǐng gěi wǒ shuǐ',                     pro:'ching gay woh shway',                  en:'Water please' },
+    { id:'f15', zh:'热水',                 pin:'Rè shuǐ',                               pro:'ruh shway',                            en:'Hot water' },
+    { id:'f16', zh:'买单',                 pin:'Mǎidān',                                pro:'my-dan',                               en:'The bill please' },
+    { id:'f17', zh:'你推荐什么？',         pin:'Nǐ tuījiàn shénme?',                    pro:'nee tway-jyen shun-muh',               en:'What do you recommend?' },
+    { id:'f18', zh:'这个辣吗？',           pin:'Zhège là ma?',                          pro:'juh-guh lah ma',                       en:'Is this spicy?' },
+    { id:'f19', zh:'好吃！',               pin:'Hǎo chī!',                              pro:'how chrr',                             en:'Delicious!' },
+    { id:'f20', zh:'菜单',                 pin:'Càidān',                                pro:'tsye-dan',                             en:'Menu' },
+    { id:'f21', zh:'素食',                 pin:'Sùshí',                                 pro:'soo-shrr',                             en:'Vegetarian' },
+    { id:'f22', zh:'可以再来一个吗？',     pin:'Kěyǐ zài lái yīgè ma?',               pro:'kuh-yee dzye lye ee-guh ma',           en:'Can we have one more?' },
+    { id:'f23', zh:'只要一个',             pin:'Zhǐ yào yīgè',                          pro:'jrr yow ee-guh',                       en:'Just one please' },
+  ],
+  ingredients: [
+    { id:'ig1',  zh:'这是猪肉吗？',        pin:'Zhè shì zhūròu ma?',                    pro:'juh shrr joo-roh ma',                  en:'Is this pork?' },
+    { id:'ig2',  zh:'这是鸡肉吗？',        pin:'Zhè shì jīròu ma?',                     pro:'juh shrr jee-roh ma',                  en:'Is this chicken?' },
+    { id:'ig3',  zh:'这是牛肉吗？',        pin:'Zhè shì niúròu ma?',                    pro:'juh shrr nyo-roh ma',                  en:'Is this beef?' },
+    { id:'ig4',  zh:'这是羊肉吗？',        pin:'Zhè shì yángròu ma?',                   pro:'juh shrr yahng-roh ma',                en:'Is this lamb?' },
+    { id:'ig5',  zh:'这是鸭肉吗？',        pin:'Zhè shì yāròu ma?',                     pro:'juh shrr yah-roh ma',                  en:'Is this duck?' },
+    { id:'ig6',  zh:'这是鱼吗？',          pin:'Zhè shì yú ma?',                        pro:'juh shrr yoo ma',                      en:'Is this fish?' },
+    { id:'ig7',  zh:'这是海鲜吗？',        pin:'Zhè shì hǎixiān ma?',                   pro:'juh shrr high-shyen ma',               en:'Is this seafood?' },
+    { id:'ig8',  zh:'这是豆腐吗？',        pin:'Zhè shì dòufu ma?',                     pro:'juh shrr doh-foo ma',                  en:'Is this tofu?' },
+    { id:'ig9',  zh:'这是鸡蛋吗？',        pin:'Zhè shì jīdàn ma?',                     pro:'juh shrr jee-dan ma',                  en:'Is this egg?' },
+    { id:'ig10', zh:'这是蘑菇吗？',        pin:'Zhè shì mógu ma?',                      pro:'juh shrr moh-goo ma',                  en:'Is this mushroom?' },
+    { id:'ig11', zh:'这个有肉吗？',        pin:'Zhège yǒu ròu ma?',                     pro:'juh-guh yoh roh ma',                   en:'Does this have meat?' },
+    { id:'ig12', zh:'这是素食吗？',        pin:'Zhè shì sùshí ma?',                     pro:'juh shrr soo-shrr ma',                 en:'Is this vegetarian?' },
+    { id:'ig13', zh:'这个有贝类吗？',      pin:'Zhège yǒu bèilèi ma?',                  pro:'juh-guh yoh bay-lay ma',               en:'Does this contain shellfish?' },
   ],
   directions: [
-    { id:'d1',  zh:'___在哪里？',      pin:'___ zài nǎlǐ?',              pro:'___ dzye nah-lee',               en:'Where is ___?' },
-    { id:'d2',  zh:'厕所',             pin:'Cèsuǒ',                       pro:'tsuh-swoh',                      en:'Bathroom' },
-    { id:'d3',  zh:'火车站',           pin:'Huǒchēzhàn',                  pro:'hwoh-chuh-jan',                  en:'Train station' },
-    { id:'d4',  zh:'机场',             pin:'Jīchǎng',                     pro:'jee-chahng',                     en:'Airport' },
-    { id:'d5',  zh:'公共汽车站',       pin:'Gōnggòng qìchē zhàn',        pro:'gong-gong chee-chuh jan',        en:'Bus station' },
-    { id:'d6',  zh:'出租车',           pin:'Chūzūchē',                    pro:'choo-dzoo-chuh',                 en:'Taxi' },
-    { id:'d7',  zh:'酒店',             pin:'Jiǔdiàn',                     pro:'jyo-dyen',                       en:'Hotel' },
-    { id:'d8',  zh:'左',               pin:'Zuǒ',                         pro:'dzwoh',                          en:'Left' },
-    { id:'d9',  zh:'右',               pin:'Yòu',                         pro:'yo',                             en:'Right' },
-    { id:'d10', zh:'直走',             pin:'Zhí zǒu',                     pro:'jrr dzoh',                       en:'Straight ahead' },
-    { id:'d11', zh:'停这里',           pin:'Tíng zhèlǐ',                  pro:'ting juh-lee',                   en:'Stop here' },
-    { id:'d12', zh:'我想去___',        pin:'Wǒ xiǎng qù ___',            pro:'woh shyang chyoo ___',           en:'I want to go to ___' },
-    { id:'d13', zh:'多远？',           pin:'Duō yuǎn?',                   pro:'dwoh ywen',                      en:'How far?' },
-    { id:'d14', zh:'要多久？',         pin:'Yào duōjiǔ?',                 pro:'yow dwoh-jyo',                   en:'How long does it take?' },
-    { id:'d15', zh:'我迷路了',         pin:'Wǒ mílù le',                  pro:'woh mee-loo luh',                en:'I am lost' },
-    { id:'d16', zh:'可以在地图上告诉我吗？', pin:'Kěyǐ zài dìtú shàng gàosù wǒ ma?', pro:'kuh-yee dzye dee-too shahng gow-soo woh ma', en:'Can you show me on the map?' },
+    { id:'d1',  zh:'___在哪里？',          pin:'___ zài nǎlǐ?',                         pro:'___ dzye nah-lee',                     en:'Where is ___?' },
+    { id:'d3',  zh:'火车站',               pin:'Huǒchēzhàn',                            pro:'hwoh-chuh-jan',                        en:'Train station' },
+    { id:'d4',  zh:'机场',                 pin:'Jīchǎng',                               pro:'jee-chahng',                           en:'Airport' },
+    { id:'d5',  zh:'公共汽车站',           pin:'Gōnggòng qìchē zhàn',                  pro:'gong-gong chee-chuh jan',              en:'Bus station' },
+    { id:'d6',  zh:'出租车',               pin:'Chūzūchē',                              pro:'choo-dzoo-chuh',                       en:'Taxi' },
+    { id:'d7',  zh:'酒店',                 pin:'Jiǔdiàn',                               pro:'jyo-dyen',                             en:'Hotel' },
+    { id:'d8',  zh:'左',                   pin:'Zuǒ',                                   pro:'dzwoh',                                en:'Left' },
+    { id:'d9',  zh:'右',                   pin:'Yòu',                                   pro:'yo',                                   en:'Right' },
+    { id:'d10', zh:'直走',                 pin:'Zhí zǒu',                               pro:'jrr dzoh',                             en:'Straight ahead' },
+    { id:'d11', zh:'停这里',               pin:'Tíng zhèlǐ',                            pro:'ting juh-lee',                         en:'Stop here' },
+    { id:'d12', zh:'我想去___',            pin:'Wǒ xiǎng qù ___',                       pro:'woh shyang chyoo ___',                 en:'I want to go to ___' },
+    { id:'d13', zh:'多远？',               pin:'Duō yuǎn?',                             pro:'dwoh ywen',                            en:'How far?' },
+    { id:'d14', zh:'要多久？',             pin:'Yào duōjiǔ?',                           pro:'yow dwoh-jyo',                         en:'How long does it take?' },
+    { id:'d15', zh:'我迷路了',             pin:'Wǒ mílù le',                            pro:'woh mee-loo luh',                      en:'I am lost' },
+    { id:'d16', zh:'可以在地图上告诉我吗？',pin:'Kěyǐ zài dìtú shàng gàosù wǒ ma?',   pro:'kuh-yee dzye dee-too shahng gow-soo woh ma', en:'Can you show me on the map?' },
+    { id:'d17', zh:'今天开放吗？',         pin:'Jīntiān kāifàng ma?',                   pro:'jin-tyen kye-fahng ma',                en:'Is it open today?' },
+    { id:'d18', zh:'关闭',                 pin:'Guānbì',                                pro:'gwahn-bee',                            en:'Closed' },
+    { id:'d19', zh:'开放',                 pin:'Kāifàng',                               pro:'kye-fahng',                            en:'Open' },
   ],
   shopping: [
-    { id:'s1', zh:'多少钱？',          pin:'Duōshǎo qián?',              pro:'dwoh-shaow chyen',               en:'How much?' },
-    { id:'s2', zh:'太贵了',            pin:'Tài guì le',                  pro:'tie gway luh',                   en:'Too expensive' },
-    { id:'s3', zh:'可以便宜一点吗？',  pin:'Kěyǐ piányí yīdiǎn ma?',    pro:'kuh-yee pyen-ee ee-dyen ma',     en:'Can it be cheaper?' },
-    { id:'s4', zh:'我要这个',          pin:'Wǒ yào zhège',                pro:'woh yow juh-guh',                en:"I'll take it" },
-    { id:'s5', zh:'随便看看',          pin:'Suíbiàn kànkàn',              pro:'sway-byen kan-kan',              en:'Just looking' },
-    { id:'s6', zh:'你有___吗？',       pin:'Nǐ yǒu ___ ma?',             pro:'nee yoh ___ ma',                 en:'Do you have ___?' },
-    { id:'s7', zh:'这是什么？',        pin:'Zhè shì shénme?',             pro:'juh shrr shun-muh',              en:'What is this?' },
-    { id:'s8', zh:'我不要',            pin:'Wǒ bù yào',                   pro:'woh boo yow',                    en:"I don't want it" },
-    { id:'s9', zh:'最低价？',          pin:'Zuì dī jià?',                 pro:'dzway dee jya',                  en:'Best price?' },
-    { id:'s10', zh:'一公斤',           pin:'Yī gōngjīn',                   pro:'ee gong-jin',                    en:'1 kilo' },
-    { id:'s11', zh:'半公斤',           pin:'Bàn gōngjīn',                  pro:'ban gong-jin',                   en:'Half a kilo' },
-    { id:'s12', zh:'四分之一公斤',     pin:'Sì fēnzhī yī gōngjīn',        pro:'srr fun-jrr ee gong-jin',        en:'Quarter kilo' },
-    { id:'s13', zh:'可以试试吗？',     pin:'Kěyǐ shìshi ma?',              pro:'kuh-yee shrr-shrr ma',           en:'Can I try it?' },
+    { id:'s1',  zh:'多少钱？',             pin:'Duōshǎo qián?',                         pro:'dwoh-shaow chyen',                     en:'How much?' },
+    { id:'s2',  zh:'太贵了',               pin:'Tài guì le',                            pro:'tie gway luh',                         en:'Too expensive' },
+    { id:'s3',  zh:'可以便宜一点吗？',     pin:'Kěyǐ piányí yīdiǎn ma?',               pro:'kuh-yee pyen-ee ee-dyen ma',           en:'Can it be cheaper?' },
+    { id:'s4',  zh:'我要这个',             pin:'Wǒ yào zhège',                          pro:'woh yow juh-guh',                      en:"I'll take it" },
+    { id:'s5',  zh:'随便看看',             pin:'Suíbiàn kànkàn',                        pro:'sway-byen kan-kan',                    en:'Just looking' },
+    { id:'s6',  zh:'你有___吗？',          pin:'Nǐ yǒu ___ ma?',                        pro:'nee yoh ___ ma',                       en:'Do you have ___?' },
+    { id:'s7',  zh:'这是什么？',           pin:'Zhè shì shénme?',                       pro:'juh shrr shun-muh',                    en:'What is this?' },
+    { id:'s8',  zh:'我不要',               pin:'Wǒ bù yào',                             pro:'woh boo yow',                          en:"I don't want it" },
+    { id:'s9',  zh:'最低价？',             pin:'Zuì dī jià?',                           pro:'dzway dee jya',                        en:'Best price?' },
+    { id:'s10', zh:'一公斤',               pin:'Yī gōngjīn',                            pro:'ee gong-jin',                          en:'1 kilo' },
+    { id:'s11', zh:'半公斤',               pin:'Bàn gōngjīn',                           pro:'ban gong-jin',                         en:'Half a kilo' },
+    { id:'s12', zh:'四分之一公斤',         pin:'Sì fēnzhī yī gōngjīn',                  pro:'srr fun-jrr ee gong-jin',              en:'Quarter kilo' },
+    { id:'s13', zh:'可以试试吗？',         pin:'Kěyǐ shìshi ma?',                       pro:'kuh-yee shrr-shrr ma',                 en:'Can I try it?' },
+    { id:'s14', zh:'不用了，谢谢',         pin:'Bù yòng le, xièxiè',                    pro:'boo yong luh, shyeh-shyeh',            en:'No thanks' },
   ],
   numbers: [
-    { id:'n1',  zh:'一',   pin:'Yī',      pro:'ee',        en:'One' },
-    { id:'n2',  zh:'二',   pin:'Èr',      pro:'err',       en:'Two' },
-    { id:'n3',  zh:'三',   pin:'Sān',     pro:'san',       en:'Three' },
-    { id:'n4',  zh:'四',   pin:'Sì',      pro:'srr',       en:'Four' },
-    { id:'n5',  zh:'五',   pin:'Wǔ',      pro:'woo',       en:'Five' },
-    { id:'n6',  zh:'六',   pin:'Liù',     pro:'lyo',       en:'Six' },
-    { id:'n7',  zh:'七',   pin:'Qī',      pro:'chee',      en:'Seven' },
-    { id:'n8',  zh:'八',   pin:'Bā',      pro:'bah',       en:'Eight' },
-    { id:'n9',  zh:'九',   pin:'Jiǔ',     pro:'jyo',       en:'Nine' },
-    { id:'n10', zh:'十',   pin:'Shí',     pro:'shrr',      en:'Ten' },
-    { id:'n11', zh:'一百', pin:'Yībǎi',   pro:'ee-bye',    en:'One hundred' },
-    { id:'n12', zh:'一千', pin:'Yīqiān',  pro:'ee-chyen',  en:'One thousand' },
-    { id:'n13', zh:'半',   pin:'Bàn',     pro:'ban',       en:'Half' },
+    { id:'n1',  zh:'一',   pin:'Yī',      pro:'ee',       en:'One' },
+    { id:'n2',  zh:'二',   pin:'Èr',      pro:'err',      en:'Two' },
+    { id:'n3',  zh:'三',   pin:'Sān',     pro:'san',      en:'Three' },
+    { id:'n4',  zh:'四',   pin:'Sì',      pro:'srr',      en:'Four' },
+    { id:'n5',  zh:'五',   pin:'Wǔ',      pro:'woo',      en:'Five' },
+    { id:'n6',  zh:'六',   pin:'Liù',     pro:'lyo',      en:'Six' },
+    { id:'n7',  zh:'七',   pin:'Qī',      pro:'chee',     en:'Seven' },
+    { id:'n8',  zh:'八',   pin:'Bā',      pro:'bah',      en:'Eight' },
+    { id:'n9',  zh:'九',   pin:'Jiǔ',     pro:'jyo',      en:'Nine' },
+    { id:'n10', zh:'十',   pin:'Shí',     pro:'shrr',     en:'Ten' },
+    { id:'n11', zh:'一百', pin:'Yībǎi',   pro:'ee-bye',   en:'One hundred' },
+    { id:'n12', zh:'一千', pin:'Yīqiān',  pro:'ee-chyen', en:'One thousand' },
+    { id:'n13', zh:'半',   pin:'Bàn',     pro:'ban',      en:'Half' },
   ],
   accommodation: [
-    { id:'a1',  zh:'我有预订',         pin:'Wǒ yǒu yùdìng',              pro:'woh yoh yoo-ding',               en:'I have a reservation' },
-    { id:'a2',  zh:'办理入住',         pin:'Bànlǐ rùzhù',                pro:'ban-lee roo-joo',                en:'Check in' },
-    { id:'a3',  zh:'退房',             pin:'Tuìfáng',                     pro:'tway-fahng',                     en:'Check out' },
-    { id:'a4',  zh:'WiFi密码',         pin:'WiFi mìmǎ',                   pro:'wifi mee-ma',                    en:'WiFi password' },
-    { id:'a5',  zh:'有免费WiFi吗？',   pin:'Yǒu miǎnfèi WiFi ma?',       pro:'yoh myen-fay wifi ma',           en:'Is WiFi included?' },
-    { id:'a6',  zh:'热水不出来',       pin:'Rè shuǐ bù chūlái',          pro:'ruh shway boo choo-lye',         en:'Hot water not working' },
-    { id:'a7',  zh:'空调',             pin:'Kōngtiáo',                    pro:'kong-tyow',                      en:'Air conditioning' },
-    { id:'a8',  zh:'请再给我毛巾',     pin:'Qǐng zài gěi wǒ máojīn',    pro:'ching dzye gay woh mow-jin',     en:'Extra towels please' },
-    { id:'a9',  zh:'延迟退房',         pin:'Yánchí tuìfáng',              pro:'yen-chrr tway-fahng',            en:'Late checkout' },
-    { id:'a10', zh:'房卡',             pin:'Fángkǎ',                      pro:'fahng-kah',                      en:'Key card' },
+    { id:'a1',  zh:'我有预订',             pin:'Wǒ yǒu yùdìng',                         pro:'woh yoh yoo-ding',                     en:'I have a reservation' },
+    { id:'a2',  zh:'办理入住',             pin:'Bànlǐ rùzhù',                           pro:'ban-lee roo-joo',                      en:'Check in' },
+    { id:'a3',  zh:'退房',                 pin:'Tuìfáng',                               pro:'tway-fahng',                           en:'Check out' },
+    { id:'a5',  zh:'有免费WiFi吗？',       pin:'Yǒu miǎnfèi WiFi ma?',                  pro:'yoh myen-fay wifi ma',                 en:'Is WiFi included?' },
+    { id:'a6',  zh:'热水不出来',           pin:'Rè shuǐ bù chūlái',                     pro:'ruh shway boo choo-lye',               en:'Hot water not working' },
+    { id:'a7',  zh:'空调',                 pin:'Kōngtiáo',                              pro:'kong-tyow',                            en:'Air conditioning' },
+    { id:'a8',  zh:'请再给我毛巾',         pin:'Qǐng zài gěi wǒ máojīn',               pro:'ching dzye gay woh mow-jin',           en:'Extra towels please' },
+    { id:'a9',  zh:'延迟退房',             pin:'Yánchí tuìfáng',                        pro:'yen-chrr tway-fahng',                  en:'Late checkout' },
+    { id:'a10', zh:'房卡',                 pin:'Fángkǎ',                                pro:'fahng-kah',                            en:'Key card' },
+  ],
+  utilities: [
+    { id:'u1', zh:'厕所',                  pin:'Cèsuǒ',                                 pro:'tsuh-swoh',                            en:'Bathroom' },
+    { id:'u2', zh:'WiFi密码',              pin:'WiFi mìmǎ',                             pro:'wifi mee-ma',                          en:'WiFi password' },
+    { id:'u3', zh:'ATM在哪里？',           pin:'ATM zài nǎlǐ?',                         pro:'ATM dzye nah-lee',                     en:'Where is the ATM?' },
+    { id:'u4', zh:'电梯在哪里？',          pin:'Diàntī zài nǎlǐ?',                      pro:'dyen-tee dzye nah-lee',                en:'Where is the elevator?' },
+    { id:'u5', zh:'有手机充电器吗？',      pin:'Yǒu shǒujī chōngdiànqì ma?',            pro:'yoh shoh-jee chong-dyen-chee ma',      en:'Do you have a phone charger?' },
+    { id:'u6', zh:'我可以在哪里充电？',    pin:'Wǒ kěyǐ zài nǎlǐ chōngdiàn?',         pro:'woh kuh-yee dzye nah-lee chong-dyen',  en:'Where can I charge my phone?' },
   ],
   payment: [
-    { id:'p1', zh:'可以用微信支付吗？', pin:'Kěyǐ yòng Wēixìn zhīfù ma?',    pro:'kuh-yee yong way-shin jrr-foo ma',    en:'Do you accept WeChat Pay?' },
-    { id:'p2', zh:'可以用支付宝吗？',   pin:'Kěyǐ yòng Zhīfùbǎo ma?',        pro:'kuh-yee yong jrr-foo-bow ma',         en:'Do you accept Alipay?' },
-    { id:'p3', zh:'可以用现金吗？',     pin:'Kěyǐ yòng xiànjīn ma?',          pro:'kuh-yee yong shyen-jin ma',           en:'Do you accept cash?' },
-    { id:'p4', zh:'可以刷卡吗？',       pin:'Kěyǐ shuākǎ ma?',                pro:'kuh-yee shwah-kah ma',                en:'Do you accept credit card?' },
-    { id:'p5', zh:'我可以扫二维码吗？', pin:'Wǒ kěyǐ sǎo èrwéimǎ ma?',      pro:'woh kuh-yee sow err-way-ma ma',       en:'Can I scan the QR code?' },
-    { id:'p6', zh:'请给我收据',         pin:'Qǐng gěi wǒ shōujù',             pro:'ching gay woh shoh-jyoo',             en:'Receipt please' },
-    { id:'p7', zh:'请找零',             pin:'Qǐng zhǎolíng',                   pro:'ching jow-ling',                      en:'Change please' },
-    { id:'p8', zh:'我没有微信支付',     pin:'Wǒ méiyǒu Wēixìn zhīfù',         pro:'woh may-yoh way-shin jrr-foo',        en:"I don't have WeChat Pay" },
-    { id:'p9', zh:'没有网络',           pin:'Méiyǒu wǎngluò',                  pro:'may-yoh wahng-lwoh',                  en:'No internet signal' },
+    { id:'p1', zh:'可以用微信支付吗？',    pin:'Kěyǐ yòng Wēixìn zhīfù ma?',           pro:'kuh-yee yong way-shin jrr-foo ma',     en:'Do you accept WeChat Pay?' },
+    { id:'p2', zh:'可以用支付宝吗？',      pin:'Kěyǐ yòng Zhīfùbǎo ma?',               pro:'kuh-yee yong jrr-foo-bow ma',          en:'Do you accept Alipay?' },
+    { id:'p3', zh:'可以用现金吗？',        pin:'Kěyǐ yòng xiànjīn ma?',                 pro:'kuh-yee yong shyen-jin ma',            en:'Do you accept cash?' },
+    { id:'p4', zh:'可以刷卡吗？',          pin:'Kěyǐ shuākǎ ma?',                       pro:'kuh-yee shwah-kah ma',                 en:'Do you accept credit card?' },
+    { id:'p5', zh:'我可以扫二维码吗？',    pin:'Wǒ kěyǐ sǎo èrwéimǎ ma?',             pro:'woh kuh-yee sow err-way-ma ma',        en:'Can I scan the QR code?' },
+    { id:'p6', zh:'请给我收据',            pin:'Qǐng gěi wǒ shōujù',                    pro:'ching gay woh shoh-jyoo',              en:'Receipt please' },
+    { id:'p7', zh:'请找零',                pin:'Qǐng zhǎolíng',                         pro:'ching jow-ling',                       en:'Change please' },
+    { id:'p8', zh:'我没有微信支付',        pin:'Wǒ méiyǒu Wēixìn zhīfù',               pro:'woh may-yoh way-shin jrr-foo',         en:"I don't have WeChat Pay" },
+    { id:'p9', zh:'没有网络',              pin:'Méiyǒu wǎngluò',                        pro:'may-yoh wahng-lwoh',                   en:'No internet signal' },
   ],
   health: [
-    { id:'h1',  zh:'救命！',           pin:'Jiùmìng!',                    pro:'jyo-ming',                       en:'Help!' },
-    { id:'h2',  zh:'叫救护车',         pin:'Jiào jiùhùchē',               pro:'jyow jyo-hoo-chuh',              en:'Call an ambulance' },
-    { id:'h3',  zh:'叫警察',           pin:'Jiào jǐngchá',                pro:'jyow jing-chah',                 en:'Call the police' },
-    { id:'h4',  zh:'医院',             pin:'Yīyuàn',                      pro:'ee-ywen',                        en:'Hospital' },
-    { id:'h5',  zh:'我生病了',         pin:'Wǒ shēngbìng le',             pro:'woh shung-bing luh',             en:'I am sick' },
-    { id:'h6',  zh:'我有关节疾病',     pin:'Wǒ yǒu guānjié jíbìng',     pro:'woh yoh gwahn-jyeh jee-bing',    en:'I have a joint condition' },
-    { id:'h7',  zh:'我需要消炎药',     pin:'Wǒ xūyào xiāoyányào',        pro:'woh shoo-yow shyow-yen-yow',     en:'I need anti-inflammatory medication' },
-    { id:'h8',  zh:'我对___过敏',      pin:'Wǒ duì ___ guòmǐn',          pro:'woh dway ___ gwoh-min',          en:'I am allergic to ___' },
-    { id:'h9',  zh:'药店',             pin:'Yàodiàn',                     pro:'yow-dyen',                       en:'Pharmacy' },
-    { id:'h10', zh:'医生',             pin:'Yīshēng',                     pro:'ee-shung',                       en:'Doctor' },
-    { id:'h11', zh:'这里很痛',         pin:'Zhèlǐ hěn tòng',             pro:'juh-lee hun tong',               en:'Pain here' },
-    { id:'h12', zh:'紧急情况',         pin:'Jǐnjí qíngkuàng',            pro:'jin-jee ching-kwahng',           en:'Emergency' },
+    { id:'h1',  zh:'救命！',               pin:'Jiùmìng!',                              pro:'jyo-ming',                             en:'Help!' },
+    { id:'h2',  zh:'叫救护车',             pin:'Jiào jiùhùchē',                         pro:'jyow jyo-hoo-chuh',                    en:'Call an ambulance' },
+    { id:'h3',  zh:'叫警察',               pin:'Jiào jǐngchá',                          pro:'jyow jing-chah',                       en:'Call the police' },
+    { id:'h4',  zh:'医院',                 pin:'Yīyuàn',                                pro:'ee-ywen',                              en:'Hospital' },
+    { id:'h5',  zh:'我生病了',             pin:'Wǒ shēngbìng le',                       pro:'woh shung-bing luh',                   en:'I am sick' },
+    { id:'h6',  zh:'我有关节疾病',         pin:'Wǒ yǒu guānjié jíbìng',               pro:'woh yoh gwahn-jyeh jee-bing',          en:'I have a joint condition' },
+    { id:'h7',  zh:'我需要消炎药',         pin:'Wǒ xūyào xiāoyányào',                  pro:'woh shoo-yow shyow-yen-yow',           en:'I need anti-inflammatory medication' },
+    { id:'h8',  zh:'我对___过敏',          pin:'Wǒ duì ___ guòmǐn',                    pro:'woh dway ___ gwoh-min',                en:'I am allergic to ___' },
+    { id:'h9',  zh:'药店',                 pin:'Yàodiàn',                               pro:'yow-dyen',                             en:'Pharmacy' },
+    { id:'h10', zh:'医生',                 pin:'Yīshēng',                               pro:'ee-shung',                             en:'Doctor' },
+    { id:'h11', zh:'这里很痛',             pin:'Zhèlǐ hěn tòng',                       pro:'juh-lee hun tong',                     en:'Pain here' },
+    { id:'h12', zh:'紧急情况',             pin:'Jǐnjí qíngkuàng',                      pro:'jin-jee ching-kwahng',                 en:'Emergency' },
   ],
   photography: [
-    { id:'ph1', zh:'可以给你拍照吗？', pin:'Kěyǐ gěi nǐ pāizhào ma?',   pro:'kuh-yee gay nee pye-jow ma',     en:'Can I take your photo?' },
-    { id:'ph2', zh:'这里可以拍照吗？', pin:'Zhèlǐ kěyǐ pāizhào ma?',    pro:'juh-lee kuh-yee pye-jow ma',     en:'Can I take a photo here?' },
-    { id:'ph3', zh:'不用闪光灯',       pin:'Bù yòng shǎnguāngdēng',      pro:'boo yong shan-gwahng-dung',      en:'No flash' },
-    { id:'ph4', zh:'漂亮！',           pin:'Piàoliang!',                  pro:'pyow-lyang',                     en:'Beautiful!' },
-    { id:'ph5', zh:'可以帮我拍照吗？', pin:'Kěyǐ bāng wǒ pāizhào ma?',  pro:'kuh-yee bahng woh pye-jow ma',   en:'Can you take a photo of me?' },
-    { id:'ph6', zh:'不准拍照',         pin:'Bù zhǔn pāizhào',            pro:'boo jwun pye-jow',               en:'No photography allowed' },
-    { id:'ph7', zh:'再拍一张',         pin:'Zài pāi yī zhāng',           pro:'dzye pye ee jahng',              en:'One more photo please' },
+    { id:'ph1', zh:'可以给你拍照吗？',     pin:'Kěyǐ gěi nǐ pāizhào ma?',              pro:'kuh-yee gay nee pye-jow ma',           en:'Can I take your photo?' },
+    { id:'ph2', zh:'这里可以拍照吗？',     pin:'Zhèlǐ kěyǐ pāizhào ma?',               pro:'juh-lee kuh-yee pye-jow ma',           en:'Can I take a photo here?' },
+    { id:'ph3', zh:'不用闪光灯',           pin:'Bù yòng shǎnguāngdēng',                pro:'boo yong shan-gwahng-dung',            en:'No flash' },
+    { id:'ph4', zh:'漂亮！',               pin:'Piàoliang!',                            pro:'pyow-lyang',                           en:'Beautiful!' },
+    { id:'ph5', zh:'可以帮我拍照吗？',     pin:'Kěyǐ bāng wǒ pāizhào ma?',             pro:'kuh-yee bahng woh pye-jow ma',         en:'Can you take a photo of me?' },
+    { id:'ph6', zh:'不准拍照',             pin:'Bù zhǔn pāizhào',                       pro:'boo jwun pye-jow',                     en:'No photography allowed' },
+    { id:'ph7', zh:'再拍一张',             pin:'Zài pāi yī zhāng',                      pro:'dzye pye ee jahng',                    en:'One more photo please' },
   ],
   nature: [
-    { id:'no1',  zh:'步道在哪里？',    pin:'Bùdào zài nǎlǐ?',           pro:'boo-dow dzye nah-lee',           en:'Where is the trail?' },
-    { id:'no2',  zh:'观景台',          pin:'Guānjǐngtái',                pro:'gwahn-jing-tie',                 en:'Viewpoint' },
-    { id:'no3',  zh:'有多远？',        pin:'Yǒu duō yuǎn?',              pro:'yoh dwoh ywen',                  en:'How far is it?' },
-    { id:'no4',  zh:'今天开放吗？',    pin:'Jīntiān kāifàng ma?',        pro:'jin-tyen kye-fahng ma',          en:'Is it open today?' },
-    { id:'no5',  zh:'门票',            pin:'Ménpiào',                     pro:'mun-pyow',                       en:'Entrance ticket' },
-    { id:'no6',  zh:'国家公园',        pin:'Guójiā gōngyuán',            pro:'gwoh-jya gong-ywen',             en:'National park' },
-    { id:'no7',  zh:'缆车',            pin:'Lǎnchē',                      pro:'lan-chuh',                       en:'Cable car' },
-    { id:'no8',  zh:'山',              pin:'Shān',                        pro:'shan',                           en:'Mountain' },
-    { id:'no9',  zh:'河',              pin:'Hé',                          pro:'huh',                            en:'River' },
-    { id:'no10', zh:'瀑布',            pin:'Pùbù',                        pro:'poo-boo',                        en:'Waterfall' },
-    { id:'no11', zh:'危险',            pin:'Wēixiǎn',                    pro:'way-shyen',                      en:'Dangerous' },
-    { id:'no12', zh:'关闭',            pin:'Guānbì',                      pro:'gwahn-bee',                      en:'Closed' },
-    { id:'no13', zh:'开放',            pin:'Kāifàng',                     pro:'kye-fahng',                      en:'Open' },
+    { id:'no1', zh:'步道在哪里？',         pin:'Bùdào zài nǎlǐ?',                       pro:'boo-dow dzye nah-lee',                 en:'Where is the trail?' },
+    { id:'no2', zh:'观景台',               pin:'Guānjǐngtái',                           pro:'gwahn-jing-tie',                       en:'Viewpoint' },
+    { id:'no3', zh:'有多远？',             pin:'Yǒu duō yuǎn?',                         pro:'yoh dwoh ywen',                        en:'How far is it?' },
+    { id:'no5', zh:'门票',                 pin:'Ménpiào',                               pro:'mun-pyow',                             en:'Entrance ticket' },
+    { id:'no6', zh:'国家公园',             pin:'Guójiā gōngyuán',                       pro:'gwoh-jya gong-ywen',                   en:'National park' },
+    { id:'no7', zh:'缆车',                 pin:'Lǎnchē',                                pro:'lan-chuh',                             en:'Cable car' },
+    { id:'no8', zh:'山',                   pin:'Shān',                                  pro:'shan',                                 en:'Mountain' },
+    { id:'no9', zh:'河',                   pin:'Hé',                                    pro:'huh',                                  en:'River' },
+    { id:'no10',zh:'瀑布',                 pin:'Pùbù',                                  pro:'poo-boo',                              en:'Waterfall' },
+    { id:'no11',zh:'危险',                 pin:'Wēixiǎn',                               pro:'way-shyen',                            en:'Dangerous' },
   ],
 };
 
@@ -436,7 +454,6 @@ function openCat(catId) {
 function renderPhrases(catId) {
   const now  = Date.now();
   const week = 7 * 24 * 3600 * 1000;
-  // Numbers stay in fixed order; all other categories sort by recently accessed
   const list = catId === 'numbers'
     ? [...PH[catId]]
     : [...PH[catId]].sort((a, b) => (recents[b.id]||0) - (recents[a.id]||0));
@@ -464,7 +481,7 @@ function openPhrase(pid) {
   recents[pid] = Date.now();
   saveRecents();
 
-  document.getElementById('detail-zh').textContent    = p.zh;
+  document.getElementById('detail-zh').textContent     = p.zh;
   document.getElementById('detail-pinyin').textContent = p.pin;
   document.getElementById('detail-pron').textContent   = p.pro;
   document.getElementById('detail-en').textContent     = p.en;
@@ -476,23 +493,25 @@ function openPhrase(pid) {
 }
 
 // ═══════════════════════════════════════════════════
-//  SPEECH  (Web Speech API — works offline on iOS)
+//  SPEECH
 // ═══════════════════════════════════════════════════
 function speak() {
   if (!activeP || !window.speechSynthesis) return;
   window.speechSynthesis.cancel();
 
-  const u = new SpeechSynthesisUtterance(activeP.zh);
-  u.lang  = 'zh-CN';
-  u.rate  = 0.8;
-  u.pitch = 1;
+  setTimeout(() => {
+    const u = new SpeechSynthesisUtterance(activeP.zh);
+    u.lang  = 'zh-CN';
+    u.rate  = 0.8;
+    u.pitch = 1;
 
-  const el = document.getElementById('detail-zh');
-  el.classList.add('speaking');
-  u.onend  = () => el.classList.remove('speaking');
-  u.onerror = () => el.classList.remove('speaking');
+    const el = document.getElementById('detail-zh');
+    el.classList.add('speaking');
+    u.onend  = () => el.classList.remove('speaking');
+    u.onerror = () => el.classList.remove('speaking');
 
-  window.speechSynthesis.speak(u);
+    window.speechSynthesis.speak(u);
+  }, 100);
 }
 
 // ═══════════════════════════════════════════════════
@@ -514,9 +533,6 @@ document.addEventListener('touchend', e => {
 // ═══════════════════════════════════════════════════
 renderCats();
 
-// ═══════════════════════════════════════════════════
-//  SERVICE WORKER REGISTRATION
-// ═══════════════════════════════════════════════════
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(() => {});
 }
